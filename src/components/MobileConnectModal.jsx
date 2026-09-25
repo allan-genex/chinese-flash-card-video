@@ -6,12 +6,15 @@ export default function MobileConnectModal({ isOpen, onClose }) {
   const [qrDataUrl, setQrDataUrl] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // Determine mobile URL: either window.location.href or 192.168.1.227
+  // Public permanent URL
+  const publicUrl = "https://allan-genex.github.io/chinese-flash-card-video/";
   const currentHost = typeof window !== 'undefined' ? window.location.hostname : 'localhost';
   const port = typeof window !== 'undefined' && window.location.port ? `:${window.location.port}` : '';
-  const mobileUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
-    ? `http://192.168.1.227${port || ':5173'}`
-    : window.location.href;
+  const localUrl = `http://192.168.1.227${port || ':5173'}`;
+
+  // Default to public URL if available
+  const [selectedUrlType, setSelectedUrlType] = useState('cloud'); // 'cloud' | 'local'
+  const mobileUrl = selectedUrlType === 'cloud' ? publicUrl : (currentHost === 'localhost' || currentHost === '127.0.0.1' ? localUrl : window.location.href);
 
   useEffect(() => {
     if (isOpen) {
